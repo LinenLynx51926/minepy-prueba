@@ -1,35 +1,28 @@
-import pygame
-from terrain import Terrain
+from ursina import *
 from player import Player
+from terrain import Terrain
+from textures import load_game_textures
 
-# Inicializar Pygame
-pygame.init()
+class Game:
+    def __init__(self):
+        self.app = Ursina()
+        window.title = 'Minecraft en Python'
+        window.borderless = False
+        window.fullscreen = False
+        window.exit_button.visible = False
+        window.fps_counter.enabled = True
 
-# Configuración de la ventana
-WIDTH, HEIGHT = 800, 600
-window = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Minecraft Game")
+        # Cargar recursos
+        self.textures = load_game_textures()
+        global block_textures
+        block_textures = self.textures
+        
+        # Crear jugador y terreno
+        self.terrain = Terrain()
+        self.player = Player()
+        
+        # Ejecutar el juego
+        self.app.run()
 
-# Crear instancias de Terrain y Player
-terrain = Terrain()
-player = Player()
-
-# Bucle principal del juego
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Actualizar el estado del jugador
-    player.update()
-
-    # Renderizar el terreno y el jugador
-    window.fill((135, 206, 235))  # Color de fondo (cielo)
-    terrain.render(window)
-    player.render(window)
-
-    pygame.display.flip()
-
-# Cerrar Pygame
-pygame.quit()
+if __name__ == '__main__':
+    game = Game()
