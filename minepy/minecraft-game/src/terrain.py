@@ -1,33 +1,24 @@
+from ursina import *
+from blocks import Block
+
 class Terrain:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.blocks = self.generate_terrain()
-
+    def __init__(self):
+        self.blocks = []
+        self.generate_terrain()
+        
     def generate_terrain(self):
-        # Genera un terreno básico con bloques de tierra
-        return [[Block('dirt') for _ in range(self.width)] for _ in range(self.height)]
+        for z in range(20):
+            for x in range(20):
+                height = random.randint(0, 3)
+                for y in range(height + 1):
+                    block_type = self.get_block_type(y, height)
+                    block = Block(position=(x, y, z), block_type=block_type)
+                    self.blocks.append(block)
 
-    def render(self):
-        # Renderiza el terreno en la pantalla
-        for row in self.blocks:
-            for block in row:
-                block.render()
-
-    def set_block(self, x, y, block_type):
-        # Coloca un bloque en la posición especificada
-        if 0 <= x < self.width and 0 <= y < self.height:
-            self.blocks[y][x] = Block(block_type)
-
-    def break_block(self, x, y):
-        # Rompe el bloque en la posición especificada
-        if 0 <= x < self.width and 0 <= y < self.height:
-            self.blocks[y][x] = Block('air')  # Reemplaza con aire al romper el bloque
-
-class Block:
-    def __init__(self, block_type):
-        self.block_type = block_type
-
-    def render(self):
-        # Lógica para renderizar el bloque
-        pass
+    def get_block_type(self, y, max_height):
+        if y == max_height:
+            return 'grass'
+        elif y > max_height - 3:
+            return 'dirt'
+        else:
+            return 'stone'
